@@ -1,7 +1,23 @@
-a
+import java.util.ArrayList;
+import java.util.List;
+
 package loginandsignup;
 
 public class Loginandsignup {
+    private static List<SignUpVerification> users = new ArrayList<>();
+
+    public static void addUser(SignUpVerification user) {
+        users.add(user);
+    }
+public static SignUpVerification findUserByUsername(String username) {
+        for (SignUpVerification user : users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+}
 
 
     public static void main(String[] args) {
