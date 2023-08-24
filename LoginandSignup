@@ -1,10 +1,11 @@
-import java.util.ArrayList;
-import java.util.List;
+
 
 package loginandsignup;
 
+import java.util.ArrayList;
+
 public class Loginandsignup {
-    private static List<SignUpVerification> users = new ArrayList<>();
+    private static ArrayList<SignUpVerification> users = new ArrayList<>();
 
     public static void addUser(SignUpVerification user) {
         users.add(user);
@@ -17,7 +18,6 @@ public static SignUpVerification findUserByUsername(String username) {
         }
         return null;
     }
-}
 
 
     public static void main(String[] args) {
