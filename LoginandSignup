@@ -1,7 +1,10 @@
-
-
 package loginandsignup;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Loginandsignup {
@@ -10,7 +13,8 @@ public class Loginandsignup {
     public static void addUser(SignUpVerification user) {
         users.add(user);
     }
-public static SignUpVerification findUserByUsername(String username) {
+
+    public static SignUpVerification findUserByUsername(String username) {
         for (SignUpVerification user : users) {
             if (user.getUsername().equals(username)) {
                 return user;
@@ -19,12 +23,44 @@ public static SignUpVerification findUserByUsername(String username) {
         return null;
     }
 
+    public static void addUserToDatabase(String username, String password) throws SQLException {
+        try (Connection connection = getConnection()) {
+            String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
+                statement.setString(2, password);
+                statement.executeUpdate();
+            }
+        }
+    }
+
+    public static boolean verifyUserCredentialsInDatabase(String username, String password) throws SQLException {
+        try (Connection connection = getConnection()) {
+            String sql = "SELECT password FROM users WHERE username = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        String storedPassword = resultSet.getString("password");
+                        return storedPassword.equals(password);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private static Connection getConnection() throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/mydb"; // Replace with your database URL
+        String user = "username"; // Replace with your database username
+        String password = "password"; // Replace with your database password
+        return DriverManager.getConnection(url, user, password);
+    }
 
     public static void main(String[] args) {
-
         Login LoginFrame = new Login();
         LoginFrame.setVisible(true);
         LoginFrame.pack();
-        LoginFrame.setLocationRelativeTo(null); 
+        LoginFrame.setLocationRelativeTo(null);
     }
 }
