@@ -1,11 +1,15 @@
-
 package loginandsignup;
 
+import com.sun.jdi.connect.spi.Connection;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -142,39 +146,40 @@ public class SignUp extends javax.swing.JFrame {
         jButton1.setText("Sign Up");
         jButton1.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) throws IOException {
                 String username = jTextField1.getText();
                 String email = jTextField2.getText();
                 char[] passwordChars = jPasswordField1.getPassword();
                 String password = new String(passwordChars);
 
                 try {
-                    // Establish database connection
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/yourdb", "username", "password");
+                   
+                    Connection connection = DriverManager.getConnection("jdbc:derby://localhost:1527/SignUpVerification [administrator on ADMINISTRATOR]", "Full Name", "Password");
 
-                    // Create SQL INSERT query
+                    
                     String insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
                     PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
                     preparedStatement.setString(1, username);
                     preparedStatement.setString(2, email);
                     preparedStatement.setString(3, password);
 
-                    // Execute the query
+                    
                     preparedStatement.executeUpdate();
 
-                    // Close resources
+                    
                     preparedStatement.close();
                     connection.close();
 
-                    // Inform the user of successful registration
+                    
                     JOptionPane.showMessageDialog(null, "Registration successful!");
-
-                } catch (SQLException ex) {
+                    
+                    } catch (SQLException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Error: Registration failed.");
                 }
             }
         });
+     
 
 
         jButton2.setForeground(new java.awt.Color(255, 51, 51));
