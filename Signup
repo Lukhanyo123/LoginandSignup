@@ -139,6 +139,43 @@ public class SignUp extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(0, 102, 102));
         jButton1.setForeground(new java.awt.Color(0, 255, 255));
         jButton1.setText("Sign Up");
+        jButton1.setText("Sign Up");
+        jButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = jTextField1.getText();
+                String email = jTextField2.getText();
+                char[] passwordChars = jPasswordField1.getPassword();
+                String password = new String(passwordChars);
+
+                try {
+                    // Establish database connection
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/yourdb", "username", "password");
+
+                    // Create SQL INSERT query
+                    String insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+                    PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+                    preparedStatement.setString(1, username);
+                    preparedStatement.setString(2, email);
+                    preparedStatement.setString(3, password);
+
+                    // Execute the query
+                    preparedStatement.executeUpdate();
+
+                    // Close resources
+                    preparedStatement.close();
+                    connection.close();
+
+                    // Inform the user of successful registration
+                    JOptionPane.showMessageDialog(null, "Registration successful!");
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error: Registration failed.");
+                }
+            }
+        });
+
 
         jButton2.setForeground(new java.awt.Color(255, 51, 51));
         jButton2.setText("Login");
